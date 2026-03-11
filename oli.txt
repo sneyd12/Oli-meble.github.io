@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meble Jamamy – Wycena na wymiar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    .hero-bg { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556911220-b0b895fafb40?w=1920'); background-size: cover; }
+    #canvas { border: 2px dashed #999; background: #f8f8f8; touch-action: none; }
+    .cabinet { position: absolute; background: #ddd; border: 1px solid #666; cursor: move; user-select: none; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #333; }
+  </style>
+</head>
+<body class="bg-zinc-100 text-zinc-900">
+
+  <!-- HERO -->
+  <section class="hero-bg min-h-screen flex items-center text-white">
+    <div class="max-w-5xl mx-auto text-center px-6">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6">Meble na wymiar Jamamy</h1>
+      <p class="text-3xl mb-8">Pomiar i projekt <span class="text-yellow-400 font-bold">GRATIS!</span></p>
+      <p class="text-xl mb-12">Kuchnie • Szafy • Łazienki • Pokoje dziecięce • Szafy wnękowe</p>
+      <button onclick="document.getElementById('wycena').scrollIntoView({behavior:'smooth'})" class="bg-red-600 hover:bg-red-700 text-white text-2xl font-bold px-12 py-6 rounded-full shadow-2xl">
+        Przejdź do wyceny →
+      </button>
+    </div>
+  </section>
+
+  <!-- WYBÓR TRYBU WYCENY -->
+  <section id="wycena" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Wybierz sposób wyceny</h2>
+      <div class="grid md:grid-cols-2 gap-10">
+        <!-- SZYBKA -->
+        <div class="bg-gray-100 p-8 rounded-2xl shadow-xl">
+          <h3 class="text-3xl font-bold mb-6">Szybka wycena</h3>
+          <p class="mb-6">Podaj wymiary i opcje – cena w kilka sekund</p>
+          <button onclick="pokazSzybka()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-xl text-xl font-bold">Wybieram szybką →</button>
+        </div>
+        <!-- SZCZEGÓŁOWA -->
+        <div class="bg-gray-100 p-8 rounded-2xl shadow-xl">
+          <h3 class="text-3xl font-bold mb-6">Szczegółowa wycena kuchni</h3>
+          <p class="mb-6">Układaj szafki na planszy 2D, wybieraj dekory Kronospan, blaty i dodatki</p>
+          <button onclick="pokazSzczegolowa()" class="w-full bg-green-600 hover:bg-green-700 text-white py-5 rounded-xl text-xl font-bold">Wybieram szczegółową →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SZYBKA WYCENA (ukryta na start) -->
+  <section id="szybka" class="py-16 bg-gray-50 hidden">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-8">Szybka wycena</h2>
+      <button onclick="ukryjSekcje()" class="mb-6 text-blue-600 underline">← Powrót do wyboru</button>
+
+      <!-- tutaj wklej swoją poprzednią logikę szybkiej wyceny, np. pola input + button oblicz -->
+      <!-- dla skrótu zostawiam placeholder – możesz wkleić stary kod obliczeń -->
+      <div class="bg-white p-8 rounded-2xl shadow">
+        <p class="text-center text-xl">Tu pola na wymiary, szuflady, materiał itp. + przycisk OBLICZ CENĘ</p>
+        <!-- ... Twój stary kod szybkiej wyceny ... -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SZCZEGÓŁOWA 2D WYCENA -->
+  <section id="szczegolowa" class="py-16 bg-gray-50 hidden">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-8">Szczegółowa wycena kuchni 2D</h2>
+      <button onclick="ukryjSekcje()" class="mb-6 text-blue-600 underline">← Powrót do wyboru</button>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Lewa strona – lista szafek + dekor + blat -->
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Dodaj elementy</h3>
+          <div class="space-y-4">
+            <button onclick="dodajSzafke('dolna 60 cm', 120, 80)" class="w-full bg-gray-200 hover:bg-gray-300 p-4 rounded">Dolna 60 cm</button>
+            <button onclick="dodajSzafke('dolna 90 cm', 180, 80)" class="w-full bg-gray-200 hover:bg-gray-300 p-4 rounded">Dolna 90 cm</button>
+            <button onclick="dodajSzafke('narożna dolna', 100, 100)" class="w-full bg-gray-200 hover:bg-gray-300 p-4 rounded">Narożna dolna</button>
+            <button onclick="dodajSzafke('górna 60 cm', 120, 70)" class="w-full bg-gray-200 hover:bg-gray-300 p-4 rounded">Górna 60 cm</button>
+            <!-- dodaj więcej typów według potrzeb -->
+          </div>
+
+          <h3 class="text-2xl font-bold mt-10 mb-4">Dekor Kronospan</h3>
+          <select id="dekor" class="w-full p-4 rounded border mb-4 text-lg">
+            <option value="#f5f5f5|K110 White">K110 White</option>
+            <option value="#000000|K190 Black">K190 Black</option>
+            <option value="#d2b48c|K564 Almond">K564 Almond</option>
+            <option value="#f5f0e1|K5981 Cashmere">K5981 Cashmere</option>
+            <option value="#e0c9a6|K680 Stone Beige">K680 Stone Beige</option>
+            <!-- dodaj więcej z listy powyżej, format: kolor_hex|Nazwa -->
+          </select>
+
+          <h3 class="text-2xl font-bold mt-6 mb-4">Blat</h3>
+          <select id="blat" class="w-full p-4 rounded border text-lg">
+            <option value="0">Bez blatu</option>
+            <option value="800">Laminowany 38 mm (+800 zł/mb)</option>
+            <option value="1800">Granit kompozytowy (+1800 zł/mb)</option>
+          </select>
+
+          <div id="cena-szczegolowa" class="mt-10 text-3xl font-bold text-green-700 text-center">
+            Szacunkowa cena: 0 zł
+          </div>
+        </div>
+
+        <!-- Prawa strona – canvas 2D -->
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Plansza kuchni (przesuwaj szafki palcem/myszką)</h3>
+          <div id="container" class="relative w-full h-96 bg-gray-200 overflow-hidden rounded-xl border-4 border-gray-400">
+            <canvas id="canvas" width="600" height="350"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // pokaż/ukryj sekcje
+    function pokazSzybka() { ukryjSekcje(); document.getElementById('szybka').classList.remove('hidden'); }
+    function pokazSzczegolowa() { ukryjSekcje(); document.getElementById('szczegolowa').classList.remove('hidden'); }
+    function ukryjSekcje() {
+      document.getElementById('szybka').classList.add('hidden');
+      document.getElementById('szczegolowa').classList.add('hidden');
+    }
+
+    // 2D DRAG & DROP – bardzo prosta implementacja
+    let selectedCabinet = null;
+    let offsetX, offsetY;
+
+    function dodajSzafke(nazwa, szer, wys) {
+      const cont = document.getElementById('container');
+      const div = document.createElement('div');
+      div.className = 'cabinet';
+      div.style.width = (szer / 5) + 'px';   // skala – 5 px = 1 cm
+      div.style.height = (wys / 5) + 'px';
+      div.style.left = '100px';
+      div.style.top = '100px';
+      div.innerText = nazwa;
+      div.dataset.cena = szer * wys / 10000 * 1200; // przykładowa cena za m²
+
+      div.addEventListener('mousedown', startDrag);
+      div.addEventListener('touchstart', startDrag, {passive: false});
+
+      cont.appendChild(div);
+      obliczCeneSzczegolowa();
+    }
+
+    function startDrag(e) {
+      selectedCabinet = e.target.closest('.cabinet');
+      if (!selectedCabinet) return;
+      e.preventDefault();
+
+      const rect = selectedCabinet.getBoundingClientRect();
+      offsetX = (e.clientX || e.touches[0].clientX) - rect.left;
+      offsetY = (e.clientY || e.touches[0].clientY) - rect.top;
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag, {passive: false});
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+    }
+
+    function drag(e) {
+      if (!selectedCabinet) return;
+      e.preventDefault();
+      const clientX = e.clientX || e.touches[0].clientX;
+      const clientY = e.clientY || e.touches[0].clientY;
+
+      selectedCabinet.style.left = (clientX - offsetX - selectedCabinet.parentElement.getBoundingClientRect().left) + 'px';
+      selectedCabinet.style.top = (clientY - offsetY - selectedCabinet.parentElement.getBoundingClientRect().top) + 'px';
+    }
+
+    function endDrag() {
+      selectedCabinet = null;
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', endDrag);
+      document.removeEventListener('touchend', endDrag);
+      obliczCeneSzczegolowa();
+    }
+
+    function obliczCeneSzczegolowa() {
+      let suma = 0;
+      document.querySelectorAll('.cabinet').forEach(el => {
+        suma += parseFloat(el.dataset.cena || 0);
+      });
+      const blat = parseFloat(document.getElementById('blat').value) || 0;
+      suma += blat * 3; // przykładowo 3 mb blatu
+      document.getElementById('cena-szczegolowa').textContent = `Szacunkowa cena: ${Math.round(suma).toLocaleString('pl-PL')} zł`;
+    }
+
+    document.getElementById('dekor').addEventListener('change', function() {
+      const [kolor] = this.value.split('|');
+      document.querySelectorAll('.cabinet').forEach(el => el.style.backgroundColor = kolor);
+    });
+
+    document.getElementById('blat').addEventListener('change', obliczCeneSzczegolowa);
+  </script>
+</body>
+</html>
